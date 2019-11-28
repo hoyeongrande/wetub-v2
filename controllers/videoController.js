@@ -1,15 +1,35 @@
-export const home = (req,res) => res.render("home",  { pageTitle: "Home" }); //.render(template, value)
+import { video } from "../db"
+import routes from "../routes"
+
+export const home = (req,res) => { 
+
+    res.render("home",  { pageTitle: "Home", video });
+
+}; //.render(template, value)
 
 export const search = (req, res) => {
     const {
         query: {term: searchingBy }
     } = req; // == const searchingBy = req.query.params
-    
-    res.render("Search", { pageTitle: "Search", searchingBy });
+
+    res.render("Search", { pageTitle: "Search", searchingBy, video });
 }
 
-export const videos = (req, res) => res.render("Videos", { pageTitle: "Videos" });
-export const upload = (req, res) => res.render("Upload", { pageTitle: "Upload" });
-export const videoDetail = (req, res) => res.render("Video Detail", { pageTitle: "Video Detail" });
-export const editVideo = (req, res) => res.render("Edit Video", { pageTitle: "Edit Video" });
-export const deleteVideo = (req, res) => res.render("Delete Video", { pageTitle: "Delete Video" });
+export const videos = (req, res) => 
+    res.render("uideos", { pageTitle: "Videos" });
+
+export const getUpload = (req, res) => 
+    res.render("upload", { pageTitle: "Upload" });
+
+export const postUpload = (req, res) => {
+    const {
+         body: { file,title, description }
+         } = req;
+         // To Do: Upload and save video
+         res.redirect(routes.videoDetail(324393));
+    };
+
+
+export const videoDetail = (req, res) => res.render("videoDetail", { pageTitle: "Video Detail" });
+export const editVideo = (req, res) => res.render("editVideo", { pageTitle: "Edit Video" });
+export const deleteVideo = (req, res) => res.render("deleteVideo", { pageTitle: "Delete Video" });
