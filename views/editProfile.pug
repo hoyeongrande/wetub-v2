@@ -3,9 +3,11 @@ extends layouts/main
 block content
     .form-container
         form(action="/edit-profile", method="post")
-           label(for="avatar") Avatar
-           input(type="file", id="avatar", name="avatar")
-           input(type="text", placeholder="name" name="name")
-           input(type="email", placeholder="email" name="email")
+            .fileUpload
+                label(for="avatar") Avatar
+                input(type="file", id="avatar", name="avatar")
+           input(type="text", placeholder="name", name="name")
+           input(type="email", placeholder="email", name="email")
            input(type="submit" value="Update Profile")
-        a.from-container__link(href=routes.changePassword) Change Password
+        a.from-container__link(href=routes.changePassword) 
+            button Change Password

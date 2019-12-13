@@ -7,10 +7,13 @@
   "dependencies": {
     "@babel/core": "^7.7.4",
     "@babel/node": "^7.7.4",
+    "@babel/polyfill": "^7.7.0",
     "@babel/preset-env": "^7.7.4",
     "autoprefixer": "^9.7.3",
+    "babel-loader": "^8.0.6",
     "body-parser": "^1.19.0",
     "cookie-parser": "^1.4.4",
+    "cross-env": "^6.0.3",
     "css-loader": "^3.2.0",
     "dotenv": "^8.2.0",
     "eslint-config-prettier": "^6.7.0",
@@ -28,9 +31,9 @@
     "webpack-cli": "^3.3.10"
   },
   "scripts": {
-    "dev:server": "nodemon --exec babel-node init.js --delay 2",
-    "dev:assets": "WEBPACK_ENV=development webpack",
-    "build:assets": "WEBPACK_ENV=production webpack"
+    "dev:server": "nodemon --exec babel-node init.js --delay 2 --ignore 'scss'",
+    "dev:assets": "webpack --mode development -w",
+    "build:assets": "webpack --mode production"
   },
   "devDependencies": {
     "eslint": "^6.7.2",
