@@ -55,6 +55,7 @@ export const videoDetail = async (req, res) => {
     res.render("videoDetail", { pageTitle: "Video Detail", video });
   } catch (error) {
     res.redirect(routes.home);
+    console.error(error);
   }
 };
 
@@ -64,13 +65,10 @@ export const getEditVideo = async (req, res) => {
   } = req;
   try {
     const video = await VideoDB.findById(id);
-    if (String(video.creator.id) !== String(req.user.id)) {
-      throw Error();
-    } else {
-      res.render("editVideo", { pageTitle: `Edit ${video.title}`, video });
-    }
+    res.render("editVideo", { pageTitle: `Edit ${video.title}`, video });
   } catch (error) {
     res.redirect(routes.home);
+    console.error(error);
   }
 };
 
@@ -84,6 +82,7 @@ export const postEditVideo = async (req, res) => {
     res.redirect(routes.videoDetail(id));
   } catch (error) {
     res.redirect(routes.home);
+    console.error(error);
   }
 };
 

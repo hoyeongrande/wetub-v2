@@ -18,7 +18,7 @@ main {
 }
 
 button,
-input,
+input:not([type="file"]),
 textarea,
 .fileUpload {
   padding: 7px 10px;
@@ -28,6 +28,7 @@ textarea,
   font-size: 14px;
   color: $black;
   font-weight: 600;
+  background-color: white;
   max-width: 320px;
   &::placeholder {
     font-weight: 300;
