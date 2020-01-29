@@ -13,5 +13,8 @@ module.exports = {
     ecmaVersion: 2018,
     sourceType: "module"
   },
-  rules: { quotes: ["off", "single"] }
+  rules: { quotes: ["off", "single"] },
+  env: {
+    browser: true
+  }
 };

@@ -1,5 +1,6 @@
 import routes from "../routes";
 import VideoDB from "../models/video";
+import Comment from "../models/Comment";
 
 export const home = async (req, res) => {
   try {
@@ -40,9 +41,11 @@ export const postUpload = async (req, res) => {
   const newVideo = await VideoDB.create({
     fileUrl: path,
     title,
-    description
+    description,
+    creator: req.user.id
   });
-  console.log(newVideo);
+  req.user.videos.push(newVideo.id);
+  req.user.save();
   res.redirect(routes.videoDetail(newVideo.id));
 };
 
@@ -51,7 +54,9 @@ export const videoDetail = async (req, res) => {
     params: { id }
   } = req;
   try {
-    const video = await VideoDB.findById(id);
+    const video = await VideoDB.findById(id)
+      .populate("creator")
+      .populate("comments");
     res.render("videoDetail", { pageTitle: "Video Detail", video });
   } catch (error) {
     res.redirect(routes.home);
@@ -65,7 +70,11 @@ export const getEditVideo = async (req, res) => {
   } = req;
   try {
     const video = await VideoDB.findById(id);
-    res.render("editVideo", { pageTitle: `Edit ${video.title}`, video });
+    if (video.creator !== req.user.id) {
+      throw Error();
+    } else {
+      res.render("editVideo", { pageTitle: `Edit ${video.title}`, video });
+    }
   } catch (error) {
     res.redirect(routes.home);
     console.error(error);
@@ -78,7 +87,7 @@ export const postEditVideo = async (req, res) => {
     body: { title, description }
   } = req;
   try {
-    await Video.findOneAndUpdate({ id }, { title, description });
+    await VideoDB.findOneAndUpdate({ id }, { title, description });
     res.redirect(routes.videoDetail(id));
   } catch (error) {
     res.redirect(routes.home);
@@ -91,7 +100,53 @@ export const deleteVideo = async (req, res) => {
     params: { id }
   } = req;
   try {
-    await VideoDB.findOneAndRemove({ _id: id });
+    const video = await VideoDB.findById(id);
+    if (video.creator !== req.user.id) {
+      throw Error();
+    } else {
+      await VideoDB.findOneAndRemove({ _id: id });
+    }
   } catch (error) {}
   res.redirect(routes.home);
+};
+
+// Register Video View
+
+export const postRegisterView = async (req, res) => {
+  const {
+    params: { id }
+  } = req;
+  try {
+    const video = await VideoDB.findById(id);
+    video.views += 1;
+    video.save();
+    res.status(200);
+  } catch (error) {
+    res.status(400);
+  } finally {
+    res.end();
+  }
+};
+
+// Comment
+
+export const postAddComment = async (req, res) => {
+  const {
+    params: { id },
+    body: { comment },
+    user
+  } = req;
+  try {
+    const video = await VideoDB.findById(id);
+    const newComment = await Comment.create({
+      text: comment,
+      creator: user.id
+    });
+    video.comments.push(newComment.id);
+    video.save();
+  } catch (error) {
+    res.status(400);
+  } finally {
+    res.end();
+  }
 };

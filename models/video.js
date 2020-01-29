@@ -25,7 +25,7 @@ const VideoSchema = new mongoose.Schema({
     }
   ],
   creator: {
-    types: mongoose.Schema.Types.ObjectId,
+    type: mongoose.Schema.Types.ObjectId,
     ref: "User"
   }
 });
